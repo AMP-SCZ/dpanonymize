@@ -10,36 +10,39 @@ import shutil
 
 class PhoenixStructure(object):
     '''Phoenix structure object'''
-    def __init__(self, phoenix_root):
+    def __init__(self, phoenix_root, BIDS=True):
         self.phoenix_root = Path(phoenix_root)
         self.studies = ['StudyA']
+        self.bids = BIDS
+        self.general_folder = self.phoenix_root / 'GENERAL'
+        self.protected_folder = self.phoenix_root / 'PROTECTED'
 
         self.study_subject_dict = {
                 'StudyA': ['subject01', 'subject02', 'subject03'],
                 'StudyB': ['subject01', 'subject02', 'subject03']
                 }
 
-
-    def create_test_phoenix_structure_for_studies(self):
-        self.phoenix_root.mkdir(exist_ok=True, parents=True)
-        self.general_folder = self.phoenix_root / 'GENERAL'
-        self.protected_folder = self.phoenix_root / 'PROTECTED'
-
-        for outdir in [self.general_folder, self.protected_folder]:
-            for study in self.studies:
-                study_dir = outdir / study
-                study_dir.mkdir(exist_ok=True, parents=True)
-
     def create_fake_protected_redcap(self):
         for study in self.studies:
             for subject in self.study_subject_dict[study]:
                 study_dir = self.protected_folder / study
-                survey_dir = study_dir / 'survey' / subject
-                survey_dir.mkdir(exist_ok=True, parents=True)
 
-                subjects = self.study_subject_dict[study]
+                if self.bids:
+                    survey_dir = study_dir / 'survey' / subject
+                    survey_dir.mkdir(exist_ok=True, parents=True)
+                    subject_json = survey_dir / (f'{subject}.{study}.json')
 
-                for subject in subjects:
+                    # create json with pii
+                    d = [{subject: 'test',
+                          'address': 'Boston, 02215',
+                          'phone_number': '877-000-0000',
+                          'ha_phone_number': '800-000-0000'}]
+
+                    with open(subject_json, 'w') as f:
+                        json.dump(d, f)
+                else:
+                    survey_dir = study_dir / subject / 'survey'
+                    survey_dir.mkdir(exist_ok=True, parents=True)
                     subject_json = survey_dir / (f'{subject}.{study}.json')
 
                     # create json with pii
@@ -51,20 +54,28 @@ class PhoenixStructure(object):
                     with open(subject_json, 'w') as f:
                         json.dump(d, f)
 
+
     def create_fake_repo(self, var, file_extension):
         for study in self.studies:
             for subject in self.study_subject_dict[study]:
                 study_dir = self.protected_folder / study
-                var_dir = study_dir / var / subject
+                var_dir = study_dir / var / subject if self.bids \
+                        else study_dir / subject / var
                 var_dir.mkdir(exist_ok=True, parents=True)
 
-                subjects = self.study_subject_dict[study]
+                # subjects = self.study_subject_dict[study]
 
-                for subject in subjects:
-                    subject_data = var_dir / \
-                            (f'{subject}.{study}.{file_extension}')
+                # for subject in subjects:
+                subject_data = var_dir / \
+                        (f'{subject}.{study}.{file_extension}')
 
-                    subject_data.touch(exist_ok=True)
+                subject_data.touch(exist_ok=True)
+
+
+def Lochness_fake_object(phoenix_root):
+    Lochness = {}
+    Lochness['phoenix_root'] = phoenix_root
+    return Lochness
 
 
 def show_tree_then_delete(tmp_dir):
@@ -79,17 +90,27 @@ def show_tree_then_delete(tmp_dir):
 @pytest.fixture
 def phoenix_structure():
     phoenix_root = 'tmp_phoenix'
-    phoenix_structure = PhoenixStructure(phoenix_root)
-    phoenix_structure.create_test_phoenix_structure_for_studies()
+    phoenix_structure = PhoenixStructure(phoenix_root, BIDS=False)
     phoenix_structure.create_fake_protected_redcap()
     phoenix_structure.create_fake_repo('mri', 'dcm')
     phoenix_structure.create_fake_repo('interviews', 'mp4')
     phoenix_structure.create_fake_repo('actigraphy', 'csv')
     
+@pytest.fixture
+def phoenix_structure_BIDS():
+    phoenix_root = 'tmp_phoenix'
+    phoenix_structure = PhoenixStructure(phoenix_root, BIDS=True)
+    phoenix_structure.create_fake_protected_redcap()
+    phoenix_structure.create_fake_repo('mri', 'dcm')
+    phoenix_structure.create_fake_repo('interviews', 'mp4')
+    phoenix_structure.create_fake_repo('actigraphy', 'csv')
 
 def test_test_phoenix_structure_short(phoenix_structure):
     show_tree_then_delete('tmp_phoenix')
 
+
+def test_test_phoenix_structure_BIDS(phoenix_structure_BIDS):
+    show_tree_then_delete('tmp_phoenix')
 
 
 # def test_read_pii_mapping_to_dict_empty():
