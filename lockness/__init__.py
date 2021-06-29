@@ -1,13 +1,13 @@
 
 from pathlib import Path
+import os
+import re
 from typing import Union, List
 import lockness.survey as SURVEY
 import lockness.actigraphy as ACTIGRAPHY
 import lockness.mri as MRI
 import lockness.video as VIDEO
 import lockness.audio as AUDIO
-import os
-import re
 
 
 dtype_module_dict = {
@@ -20,6 +20,7 @@ dtype_module_dict = {
 
 
 class FileInPhoenixBIDS(object):
+    '''PHOENIX file class used to grab file information'''
     def __init__(self, file_path):
         self.file_path = Path(file_path)
         self.subject = self.file_path.parent.name
@@ -28,11 +29,28 @@ class FileInPhoenixBIDS(object):
         self.general_path = re.sub('/PROTECTED/', '/GENERAL/',
                                    str(self.file_path))
 
+    def anonymize_fileInPhoenix(self) -> None:
+        '''Remove PII from the fileInPhoenix object
+
+        Key arguments:
+            - fileInPhoenix: FileInPhoenix or FileInPhoenixBIDS object. It should
+                             have following attributes
+                - file_path: path of the file, Path.
+                - dtype: type of the data, str.
+                - general_path: path of the target GENERAL path, Path.
+                eg) fileInPhoenix['file_path'] = 'PATH/PROTECTED/PATH/TO/FILE'
+                    fileInPhoenix['dtype'] = 'survey'
+                    fileInPhoenix['general_path'] = 'PATH/GENERAL/PATH/TO/FILE'
+        '''
+        module = dtype_module_dict.get(self.dtype)
+        module.remove_pii(self.file_path, self.general_path)
+
     def __repr__(self):
         return f"<{self.file_path.name}>"
 
 
 class FileInPhoenix(FileInPhoenixBIDS):
+    '''NON-BIDS PHOENIX file class used to grab file information'''
     def __init__(self, file_path):
         super().__init__(file_path)
         self.dtype = self.file_path.parent.name
@@ -40,7 +58,14 @@ class FileInPhoenix(FileInPhoenixBIDS):
 
 
 def get_all_file_objects_from_phoenix(phoenix_root: Union[Path, str],
-                                      BIDS: bool) -> List[FileInPhoenixBIDS]:
+                                      BIDS: bool) -> List[FileInPhoenix]:
+    '''Search all files under phoenix and get a list of FileInPhoenix objects
+
+    Key Arguments:
+        - phoenix_root: root of PHOENIX directory, Path or str.
+        - BIDS: True if the PHOENIX is in BIDS structure, bool.
+    '''
+
     protected_dir = Path(phoenix_root) / 'PROTECTED'
 
     protected_files = []
@@ -56,7 +81,7 @@ def get_all_file_objects_from_phoenix(phoenix_root: Union[Path, str],
     return protected_files
 
 
-def lock_lochness(Lochness: 'Lochness object') -> None:
+def lock_lochness(Lochness: 'Lochness') -> None:
     '''Lock PII using information from Lochness object
 
     Requirements:
@@ -70,23 +95,5 @@ def lock_lochness(Lochness: 'Lochness object') -> None:
 
     file_object_list = get_all_file_objects_from_phoenix(phoenix_root, bids)
     for file_object in file_object_list:
-        lock_fileInPhoenix(file_object)
-
-
-def lock_fileInPhoenix(fileInPhoenix: FileInPhoenixBIDS) -> None:
-    '''Remove PII from the fileInPhoenix object
-
-    Key arguments:
-        - fileInPhoenix: FileInPhoenix or FileInPhoenixBIDS object. It should
-                         have following attributes
-            - file_path: path of the file, Path.
-            - dtype: type of the data, str.
-            - general_path: path of the target GENERAL path, Path.
-            eg) fileInPhoenix['file_path'] = 'PATH/PROTECTED/PATH/TO/FILE'
-                fileInPhoenix['dtype'] = 'survey'
-                fileInPhoenix['general_path'] = 'PATH/GENERAL/PATH/TO/FILE'
-    '''
-    module = dtype_module_dict.get(fileInPhoenix.dtype)
-    module.remove_pii(fileInPhoenix.file_path,
-                      fileInPhoenix.general_path)
+        file_object.anonymize_fileInPhoenix()
 
