@@ -14,13 +14,13 @@ sys.path.append(str(test_dir))
 
 from bpanonymize_test import phoenix_structure
 
-from bpanonymize.redcap import read_pii_mapping_to_dict
-from bpanonymize.redcap import load_raw_return_proc_json
-from bpanonymize.redcap import process_pii_string
-from bpanonymize.redcap import get_shuffle_dict_for_type
+from bpanonymize.survey import read_pii_mapping_to_dict
+from bpanonymize.survey import load_raw_return_proc_json
+from bpanonymize.survey import process_pii_string
+from bpanonymize.survey import get_shuffle_dict_for_type
 
 
-def test_redcap_simple(phoenix_structure):
+def test_survey_simple(phoenix_structure):
     pass
 
 
