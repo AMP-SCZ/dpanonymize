@@ -2,7 +2,7 @@ init:
 	pip install pipenv --upgrade
 	pipenv install --dev --skip-lock
 test:
-	pipenv run py.test tests/test.py
+	pipenv run pytest tests/test.py
 dist:
 	python setup.py sdist bdist_wheel --universal
 publish:

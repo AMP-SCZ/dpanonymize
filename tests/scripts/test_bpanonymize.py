@@ -18,7 +18,7 @@ sys.path.append(str(test_dir))
 from bpanonymize_test import phoenix_structure, phoenix_structure_BIDS
 from bpanonymize_test import Lochness_fake_object, show_tree_then_delete
 
-from bpanonymize import lock_file, lock_directory
+from bpanon import lock_file, lock_directory
 
 
 def test_bpanonymize_a_file():
