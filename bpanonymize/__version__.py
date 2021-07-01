@@ -1,7 +1,6 @@
-__title__ = 'lockness'
+__title__ = 'bpanonymize/'
 __description__ = 'PII remover'
-__url__ = 'https://github.com/PREDICT-DPACC/lockness'
+__url__ = 'https://github.com/AMP=SCZ/bpanonymize'
 __version__ = '0.1'
 __author__ = 'DPACC'
 __author_email__ = 'kevincho@bwh.harvard.edu'
-

@@ -3,11 +3,11 @@ from pathlib import Path
 import os
 import re
 from typing import Union, List
-import lockness.survey as SURVEY
-import lockness.actigraphy as ACTIGRAPHY
-import lockness.mri as MRI
-import lockness.video as VIDEO
-import lockness.audio as AUDIO
+import bpanonymize.survey as SURVEY
+import bpanonymize.actigraphy as ACTIGRAPHY
+import bpanonymize.mri as MRI
+import bpanonymize.video as VIDEO
+import bpanonymize.audio as AUDIO
 
 
 dtype_module_dict = {

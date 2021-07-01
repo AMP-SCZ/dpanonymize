@@ -1,8 +1,8 @@
-import lockness
+import bpanonymize
 from pathlib import Path
 import sys
 import re
-lochness_root = Path(lockness.__path__[0]).parent
+lochness_root = Path(bpanonymize.__path__[0]).parent
 scripts_dir = lochness_root / 'scripts'
 test_dir = lochness_root / 'tests'
 sys.path.append(str(scripts_dir))
@@ -11,10 +11,10 @@ sys.path.append(str(test_dir))
 from typing import Union
 import os
 
-from lockness_test import phoenix_structure
+from bpanonymize_test import phoenix_structure
 
 
-class FileInPhoenix(object):
+class FileInPhoenixBIDS(object):
     def __init__(self, file_path):
         self.file_path = Path(file_path)
         self.subject = self.file_path.parent.name
@@ -34,7 +34,7 @@ def get_all_file_objects_from_phoenix(phoenix_root):
         for f in files:
             full_path = Path(root) / f
             if len(full_path.relative_to(phoenix_root).parts) == 5:
-                protected_files.append(FileInPhoenix(full_path))
+                protected_files.append(FileInPhoenixBIDS(full_path))
 
     return protected_files
 

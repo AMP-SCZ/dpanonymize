@@ -1,4 +1,4 @@
-import lockness
+import bpanonymize
 from pathlib import Path
 import pandas as pd
 import tempfile
@@ -6,18 +6,18 @@ import json
 import string
 
 import sys
-lochness_root = Path(lockness.__path__[0]).parent
+lochness_root = Path(bpanonymize.__path__[0]).parent
 scripts_dir = lochness_root / 'scripts'
 test_dir = lochness_root / 'tests'
 sys.path.append(str(scripts_dir))
 sys.path.append(str(test_dir))
 
-from lockness_test import phoenix_structure
+from bpanonymize_test import phoenix_structure
 
-from lockness.redcap import read_pii_mapping_to_dict
-from lockness.redcap import load_raw_return_proc_json
-from lockness.redcap import process_pii_string
-from lockness.redcap import get_shuffle_dict_for_type
+from bpanonymize.redcap import read_pii_mapping_to_dict
+from bpanonymize.redcap import load_raw_return_proc_json
+from bpanonymize.redcap import process_pii_string
+from bpanonymize.redcap import get_shuffle_dict_for_type
 
 
 def test_redcap_simple(phoenix_structure):
