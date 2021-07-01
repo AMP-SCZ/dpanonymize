@@ -33,14 +33,13 @@ class FileInPhoenixBIDS(object):
         '''Remove PII from the fileInPhoenix object
 
         Key arguments:
-            - fileInPhoenix: FileInPhoenix or FileInPhoenixBIDS object. It should
-                             have following attributes
-                - file_path: path of the file, Path.
-                - dtype: type of the data, str.
-                - general_path: path of the target GENERAL path, Path.
-                eg) fileInPhoenix['file_path'] = 'PATH/PROTECTED/PATH/TO/FILE'
-                    fileInPhoenix['dtype'] = 'survey'
-                    fileInPhoenix['general_path'] = 'PATH/GENERAL/PATH/TO/FILE'
+            - self: It should have following attributes
+                - self.file_path: path of the file, Path.
+                - self.dtype: type of the data, str.
+                - self.general_path: path of the target GENERAL path, Path.
+                eg) self.file_path = 'PATH/PROTECTED/PATH/TO/FILE'
+                    self.dtype = 'survey'
+                    fileInPhoenix.general_path = 'PATH/GENERAL/PATH/TO/FILE'
         '''
         module = dtype_module_dict.get(self.dtype)
         module.remove_pii(self.file_path, self.general_path)

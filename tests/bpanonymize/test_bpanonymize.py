@@ -6,9 +6,9 @@ import json
 import string
 
 import sys
-lochness_root = Path(bpanonymize.__path__[0]).parent
-scripts_dir = lochness_root / 'scripts'
-test_dir = lochness_root / 'tests'
+bpanonymize_root = Path(bpanonymize.__path__[0]).parent
+scripts_dir = bpanonymize_root / 'scripts'
+test_dir = bpanonymize_root / 'tests'
 sys.path.append(str(scripts_dir))
 sys.path.append(str(test_dir))
 
