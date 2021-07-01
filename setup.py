@@ -4,26 +4,15 @@ from setuptools import setup, find_packages
 here = os.path.abspath(os.path.dirname(__file__))
 
 requires = [
-    'dropbox',
-    'boxsdk',
-    'LAMP-core',
-    'paramiko',
-    'pyyaml',
-    'mano',
-    'yaxil',
-    'six',
-    'pytz',
     'pandas',
-    'jsonpath_ng'
 ]
 
 test_requirements = [
     'pytest',
-    'vcrpy'
 ]
 
 about = dict()
-with open(os.path.join(here, 'lochness', '__version__.py'), 'r') as f:
+with open(os.path.join(here, 'bpanonymize', '__version__.py'), 'r') as f:
     exec(f.read(), about)
 
 setup(
@@ -38,11 +27,7 @@ setup(
         '': ['*.yaml', '*.html']
     },
     scripts=[
-        'scripts/sync.py',
-        'scripts/phoenix_generator.py',
-        'scripts/listen_to_redcap.py',
-        'scripts/lochness_check_config.py',
-        'scripts/lochness_create_template.py',
+        'scripts/anonymize_phoenix.py',
     ],
     install_requires=requires,
     tests_require=test_requirements
