@@ -31,3 +31,19 @@ def test_bpanonymize_BIDS(phoenix_structure_BIDS):
     bpanonymize.lock_lochness(Lochness)
 
     show_tree_then_delete('tmp_phoenix')
+
+
+def test_bpanonymize_module_nonBIDS(phoenix_structure):
+    Lochness = Lochness_fake_object('tmp_phoenix')
+    Lochness['BIDS'] = False
+    bpanonymize.lock_lochness(Lochness, module='survey')
+
+    show_tree_then_delete('tmp_phoenix')
+
+
+def test_bpanonymize_module_BIDS(phoenix_structure_BIDS):
+    Lochness = Lochness_fake_object('tmp_phoenix')
+    Lochness['BIDS'] = True
+    bpanonymize.lock_lochness(Lochness, module='survey')
+
+    show_tree_then_delete('tmp_phoenix')

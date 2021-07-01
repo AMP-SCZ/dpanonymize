@@ -13,6 +13,7 @@ sys.path.append(str(scripts_dir))
 sys.path.append(str(test_dir))
 
 from bpanonymize_test import phoenix_structure, phoenix_structure_BIDS
+from bpanonymize_test import Lochness_fake_object, show_tree_then_delete
 
 from bpanonymize.survey import read_pii_mapping_to_dict
 from bpanonymize.survey import load_raw_return_proc_json
@@ -21,10 +22,11 @@ from bpanonymize.survey import get_shuffle_dict_for_type
 
 
 def test_survey_simple(phoenix_structure):
+    show_tree_then_delete('tmp_phoenix')
     pass
 
 
-def test_survey_simple_BIDS(phoenix_structure):
+def test_survey_simple_BIDS(phoenix_structure_BIDS):
     pass
 
 

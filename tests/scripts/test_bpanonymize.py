@@ -1,56 +1,58 @@
 import bpanonymize
 from pathlib import Path
+import pandas as pd
+import tempfile
+import json
+import string
+import os
+import shutil
+
 import sys
-import re
-lochness_root = Path(bpanonymize.__path__[0]).parent
-scripts_dir = lochness_root / 'scripts'
-test_dir = lochness_root / 'tests'
+bpanonymize_root = Path(bpanonymize.__path__[0]).parent
+scripts_dir = bpanonymize_root / 'scripts'
+test_dir = bpanonymize_root / 'tests'
 sys.path.append(str(scripts_dir))
 sys.path.append(str(test_dir))
 
-from typing import Union
-import os
 
-from bpanonymize_test import phoenix_structure
+from bpanonymize_test import phoenix_structure, phoenix_structure_BIDS
+from bpanonymize_test import Lochness_fake_object, show_tree_then_delete
+
+from bpanonymize import lock_file, lock_directory
 
 
-class FileInPhoenixBIDS(object):
-    def __init__(self, file_path):
-        self.file_path = Path(file_path)
-        self.subject = self.file_path.parent.name
-        self.dtype = self.file_path.parent.parent.name
-        self.study = self.file_path.parent.parent.parent.name
+def test_bpanonymize_a_file():
+    for datatype in 'mri', 'survey', 'audio', 'video', 'actigraphy':
+        in_file = Path(f'{datatype}_temp_file.dcm')
+        in_file.touch()
 
-        self.general = re.sub('/PROTECTED/', '/GENERAL', str(self.file_path))
+        pii_removed_file = Path('pii_removed_' + in_file.name)
 
-    def __repr__(self):
-        return f"<{self.file_path.name}>"
+        lock_file(in_file, pii_removed_file, datatype)
+        assert pii_removed_file.is_file()
 
-def get_all_file_objects_from_phoenix(phoenix_root):
-    protected_dir = Path(phoenix_root) / 'PROTECTED'
-
-    protected_files = []
-    for root, dirs, files in os.walk(protected_dir):
-        for f in files:
-            full_path = Path(root) / f
-            if len(full_path.relative_to(phoenix_root).parts) == 5:
-                protected_files.append(FileInPhoenixBIDS(full_path))
-
-    return protected_files
+        os.remove(in_file)
+        os.remove(pii_removed_file)
 
 
 
-def test_phoenix_structure_class(phoenix_structure):
+def test_bpanonymize_a_directory():
+    for datatype in 'mri', 'survey', 'audio', 'video', 'actigraphy':
+        temp_dir = Path(f'{datatype}_raw_dir')
+        temp_dir.mkdir(exist_ok=True)
+        
+        in_file = temp_dir / f'{datatype}_temp_file.dcm'
+        in_file.touch()
 
-    protected_files = get_all_file_objects_from_phoenix('tmp_phoenix')
+        out_dir = Path(f'{datatype}_pii_removed_dir')
 
-    print(protected_files)
-    # print(phoenixStruct.StudyA.survey)
-    # print(phoenixStruct.StudyA.survey.subject01)
-    # print(phoenixStruct.StudyA.survey.subject01.protected_files)
-    # print(dir(phoenixStruct.StudyA.survey.subject01))
-    # assert len(phoenixStruct.studies) == 1
-    
-    # print(phoenixStruct.stu)
-    # print(phoenixStruct.datatypes)
-    # print(phoenixStruct.subjects)
+        lock_directory(temp_dir, out_dir, datatype)
+        assert out_dir.is_dir()
+        assert (out_dir / in_file.name).is_file()
+
+        shutil.rmtree(temp_dir)
+        shutil.rmtree(out_dir)
+
+
+
+
