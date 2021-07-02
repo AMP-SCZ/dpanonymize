@@ -54,11 +54,12 @@ bash dpanonymize_test.sh
 
 - Execute PII removal on a PHOENIX folder
 ```
-dpanon.py --phoenix_root /path/to/PHOENIX --datatype survey
-dpanon.py --phoenix_root /path/to/PHOENIX --datatype audio
-dpanon.py --phoenix_root /path/to/PHOENIX --datatype video
+# apply PII removal in all datatypes
+dpanon.py --phoenix_root /path/to/PHOENIX
+
+# or you can also select which datatype to apply PII removal
 dpanon.py --phoenix_root /path/to/PHOENIX --datatype actigraphy
-dpanon.py --phoenix_root /path/to/PHOENIX --datatype mri
+dpanon.py --phoenix_root /path/to/PHOENIX --datatype survey
 ```
 
 - Execute PII removal on a single file

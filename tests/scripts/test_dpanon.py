@@ -128,3 +128,18 @@ def test_phoenix_root_bids_with_wrong_dt(phoenix_structure_BIDS):
 
     dpanonymize(args)
     show_tree_then_delete('tmp_phoenix')
+
+
+def test_phoenix_root_only():
+    args = parse_args(['-p', 'tmp_phoenix'])
+
+
+def test_file_only():
+    with pytest.raises(SystemExit):
+        args = parse_args(['-i', 'tmp_file'])
+
+
+def test_dir_only():
+    with pytest.raises(SystemExit):
+    # with datatype
+        args = parse_args(['-d', 'tmp_dir'])
