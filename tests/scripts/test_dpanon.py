@@ -57,7 +57,6 @@ def test_dpanonymize_a_directory():
 
 def test_parser():
     # with datatype
-    # argparser = parse_args()
     args = parse_args(['-p', 'tmp_phoenix',
                        '-dt', 'survey'])
     print(args)
@@ -65,7 +64,6 @@ def test_parser():
 
 def test_phoenix_root_non_bids_with_dt(phoenix_structure):
     # with datatype
-    # argparser = parse_args()
     args = parse_args(['-p', 'tmp_phoenix',
                        '-dt', 'survey'])
 
@@ -75,7 +73,6 @@ def test_phoenix_root_non_bids_with_dt(phoenix_structure):
 
 def test_phoenix_root_bids_with_dt(phoenix_structure_BIDS):
     # with datatype
-    # argparser = parse_args()
     args = parse_args(['-p', 'tmp_phoenix',
                        '-dt', 'survey',
                        '-b'])
@@ -92,11 +89,9 @@ def test_file_with_dt():
         pii_removed_file = Path('pii_removed_' + in_file.name)
 
         # with datatype
-        # argparser = parse_args()
         args = parse_args(['-i', str(in_file),
                            '-o', str(pii_removed_file),
                            '-dt', datatype])
-        # lock_file(in_file, pii_removed_file, datatype)
         dpanonymize(args)
         assert pii_removed_file.is_file()
 
@@ -127,11 +122,9 @@ def test_dir_with_dt():
 
 def test_phoenix_root_bids_with_wrong_dt(phoenix_structure_BIDS):
     # with datatype
-    # argparser = parse_args()
     args = parse_args(['-p', 'tmp_phoenix',
                        '-dt', 'haha',
                        '-b'])
 
     dpanonymize(args)
     show_tree_then_delete('tmp_phoenix')
-

@@ -46,6 +46,7 @@ def lock_directory(in_dir: Union[Path, str],
             out_file = Path(out_dir) / in_file.name
             module.remove_pii(in_file, out_file)
 
+
 def parse_args(args):
     '''Parse inputs coming from the terminal'''
     parser = ap.ArgumentParser(description='dpanonymize: PII remover')
@@ -67,7 +68,6 @@ def parse_args(args):
                         required=True,
                         help='Datatype to remove PII (applies to -p, -i).')
 
-    # return argparser.parse_args(args)
     return parser.parse_args(args)
 
 
@@ -82,6 +82,7 @@ def dpanonymize(args):
 
         if args.in_dir:
             lock_directory(args.in_dir, args.out_dir, args.datatype)
+
 
 if __name__ == '__main__':
     args = parse_args(sys.argv[1:])
