@@ -41,6 +41,7 @@ class PhoenixStructure(object):
 
                     with open(subject_json, 'w') as f:
                         json.dump(d, f)
+
                 else:
                     survey_dir = study_dir / subject / 'survey' / 'processed' \
                             if processed else \
