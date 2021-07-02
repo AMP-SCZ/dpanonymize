@@ -5,6 +5,9 @@ to work with `lochness` on a PHOENIX structured data, but it also has
 functionalities to take separate file and folder with predefined datatype.
 
 
+
+TO BE UPDATED
+
 ## Contents
 1. [Installation](#installation)
 2. [How to run](#how_to_run)
@@ -64,7 +67,7 @@ dpanon.py --phoenix_root /path/to/PHOENIX --datatype survey
 
 - Execute PII removal on a single file
 ```
-dpannon.py \
+dpanon.py \
     --in_file /path/to/survey/file \
     --out_file /path/to/PII_removed/file \
     --datatype survey
@@ -73,7 +76,7 @@ dpannon.py \
 - Execute PII removal on a directory where there are multiple files of same data type
     - This applies PII removal on all files under the given directory.
 ```
-dpannon.py \
+dpanon.py \
     --in_dir /path/to/survey/directory \
     --out_dir /path/to/PII_removed/directory \
     --datatype survey
