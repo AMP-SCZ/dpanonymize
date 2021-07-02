@@ -22,13 +22,14 @@ class PhoenixStructure(object):
                 'StudyB': ['subject01', 'subject02', 'subject03']
                 }
 
-    def create_fake_protected_redcap(self):
+    def create_fake_protected_redcap(self, processed=False):
         for study in self.studies:
             for subject in self.study_subject_dict[study]:
                 study_dir = self.protected_folder / study
 
                 if self.bids:
-                    survey_dir = study_dir / 'survey' / subject
+                    survey_dir = study_dir / 'survey' / 'processed' / subject \
+                        if processed else study_dir / 'survey' / 'raw' / subject
                     survey_dir.mkdir(exist_ok=True, parents=True)
                     subject_json = survey_dir / (f'{subject}.{study}.json')
 
@@ -41,7 +42,10 @@ class PhoenixStructure(object):
                     with open(subject_json, 'w') as f:
                         json.dump(d, f)
                 else:
-                    survey_dir = study_dir / subject / 'survey'
+                    survey_dir = study_dir / subject / 'survey' / 'processed' \
+                            if processed else \
+                            study_dir / subject / 'survey' / 'raw'
+
                     survey_dir.mkdir(exist_ok=True, parents=True)
                     subject_json = survey_dir / (f'{subject}.{study}.json')
 
@@ -55,12 +59,20 @@ class PhoenixStructure(object):
                         json.dump(d, f)
 
 
-    def create_fake_repo(self, var, file_extension):
+    def create_fake_repo(self, var, file_extension, processed=False):
         for study in self.studies:
             for subject in self.study_subject_dict[study]:
                 study_dir = self.protected_folder / study
-                var_dir = study_dir / var / subject if self.bids \
-                        else study_dir / subject / var
+                if self.bids:
+                    var_dir = study_dir / var / 'processed' / subject \
+                            if processed else \
+                            study_dir / var / 'raw' / subject
+
+                else:
+                    var_dir = study_dir / subject / var / 'processed' \
+                            if processed else \
+                            study_dir / subject / var / 'raw'
+
                 var_dir.mkdir(exist_ok=True, parents=True)
 
                 # subjects = self.study_subject_dict[study]
@@ -96,6 +108,7 @@ def phoenix_structure():
     phoenix_structure.create_fake_repo('interviews', 'mp4')
     phoenix_structure.create_fake_repo('actigraphy', 'csv')
     
+
 @pytest.fixture
 def phoenix_structure_BIDS():
     phoenix_root = 'tmp_phoenix'
@@ -105,101 +118,11 @@ def phoenix_structure_BIDS():
     phoenix_structure.create_fake_repo('interviews', 'mp4')
     phoenix_structure.create_fake_repo('actigraphy', 'csv')
 
+
 def test_test_phoenix_structure_short(phoenix_structure):
     show_tree_then_delete('tmp_phoenix')
 
 
 def test_test_phoenix_structure_BIDS(phoenix_structure_BIDS):
     show_tree_then_delete('tmp_phoenix')
-
-
-# def test_read_pii_mapping_to_dict_empty():
-    # assert read_pii_mapping_to_dict('') == {}
-
-
-# def test_read_pii_mapping_to_dict_one_line():
-    # df = pd.DataFrame({
-        # 'pii_label_string': ['address'],
-        # 'process': 'remove'
-        # })
-
-    # with tempfile.NamedTemporaryFile(
-            # delete=False,
-            # suffix='.csv') as tmpfilename:
-        # df.to_csv(tmpfilename.name)
-
-    # d = read_pii_mapping_to_dict(tmpfilename.name)
-    # assert d == {'address': 'remove'}
-
-
-# def test_read_pii_mapping_to_dict_two_line():
-    # df = pd.DataFrame({
-        # 'pii_label_string': ['address', 'phone_number'],
-        # 'process': ['remove', 'random_number']
-        # })
-
-    # with tempfile.NamedTemporaryFile(
-            # delete=False,
-            # suffix='.csv') as tmpfilename:
-        # df.to_csv(tmpfilename.name)
-
-    # d = read_pii_mapping_to_dict(tmpfilename.name)
-    # assert d == {'address': 'remove',
-                 # 'phone_number': 'random_number'}
-
-
-# def get_pii_mapping_table():
-    # df = pd.DataFrame({
-        # 'pii_label_string': ['address', 'phone_number'],
-        # 'process': ['remove', 'random_number']
-        # })
-
-    # with tempfile.NamedTemporaryFile(
-            # delete=False,
-            # suffix='.csv') as tmpfilename:
-        # df.to_csv(tmpfilename.name)
-
-    # return tmpfilename.name
-
-
-# def get_json_file():
-    # d = [{'subject': 'test',
-          # 'address': 'Boston, 02215',
-          # 'phone_number': '877-000-0000',
-          # 'ha_phone_number': '800-000-0000'}]
-
-    # with tempfile.NamedTemporaryFile(
-            # delete=False,
-            # suffix='.json') as tmpfilename:
-        # with open(tmpfilename.name, 'w') as f:
-            # json.dump(d, f)
-
-    # return tmpfilename.name
-
-
-# def test_load_raw_return_proc_json():
-    # print()
-    # json_loc = get_json_file()
-    # pii_table_loc = get_pii_mapping_table()
-
-    # pii_str_proc_dict = read_pii_mapping_to_dict(pii_table_loc)
-    # processed_content = load_raw_return_proc_json(json_loc,
-                                                  # pii_str_proc_dict,
-                                                  # 'subject01')
-
-    # assert type(processed_content) == bytes
-
-
-# def test_process_pii_string():
-    # print(process_pii_string('my name is kevin', 'random_string', 'subject01'))
-    # print(process_pii_string('1923956', 'random_number', 'subject01'))
-    # print(process_pii_string('816-198-963', 'random_number', 'subject01'))
-    # print(process_pii_string('Kevin Cho', 'replace_with_subject_id',
-                             # 'kevin2subject01'))
-
-
-# def test_get_shuffle_dict_for_type():
-    # print(get_shuffle_dict_for_type(string.digits, '393jfi'))
-    # print(get_shuffle_dict_for_type(string.ascii_lowercase, '393jfiefy090'))
-    # print(get_shuffle_dict_for_type(string.ascii_uppercase, '393jfUUy090'))
 

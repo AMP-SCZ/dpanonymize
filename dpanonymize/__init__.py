@@ -25,8 +25,8 @@ class FileInPhoenixBIDS(object):
     def __init__(self, file_path):
         self.file_path = Path(file_path)
         self.subject = self.file_path.parent.name
-        self.dtype = self.file_path.parent.parent.name
-        self.study = self.file_path.parent.parent.parent.name
+        self.dtype = self.file_path.parent.parent.parent.name
+        self.study = self.file_path.parent.parent.parent.parent.name
         self.general_path = re.sub('/PROTECTED/', '/GENERAL/',
                                    str(self.file_path))
 
@@ -42,6 +42,7 @@ class FileInPhoenixBIDS(object):
                     self.dtype = 'survey'
                     fileInPhoenix.general_path = 'PATH/GENERAL/PATH/TO/FILE'
         '''
+        print(self.dtype)
         module = dtype_module_dict.get(self.dtype)
         module.remove_pii(self.file_path, self.general_path)
 
@@ -53,7 +54,7 @@ class FileInPhoenix(FileInPhoenixBIDS):
     '''NON-BIDS PHOENIX file class used to grab file information'''
     def __init__(self, file_path):
         super().__init__(file_path)
-        self.dtype = self.file_path.parent.name
+        self.dtype = self.file_path.parent.parent.name
         self.subject = self.file_path.parent.parent.name
 
 
