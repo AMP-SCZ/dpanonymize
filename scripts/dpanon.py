@@ -2,9 +2,10 @@
 
 from pathlib import Path
 import argparse as ap
+import sys
 from typing import Union, List
 from dpanonymize import dtype_module_dict
-import dpanonymize as bpan
+import dpanonymize as dpanon
 
 '''
 dpanonymize is designed to be executed from lochness, but this simple shell
@@ -45,11 +46,12 @@ def lock_directory(in_dir: Union[Path, str],
             out_file = Path(out_dir) / in_file.name
             module.remove_pii(in_file, out_file)
 
-
-if __name__ == '__main__':
+def parse_args(args):
+    '''Parse inputs coming from the terminal'''
     parser = ap.ArgumentParser(description='dpanonymize: PII remover')
 
     parser.add_argument('-p', '--phoenix_root',
+                        type=str,
                         help='Root of PHOENIX directory. If this option is '
                              'given, -i, -o, -d, -od are ignored')
     parser.add_argument('-b', '--bids', action='store_true',
@@ -65,16 +67,23 @@ if __name__ == '__main__':
                         required=True,
                         help='Datatype to remove PII (applies to -p, -i).')
 
-    args = parser.parse_args()
+    # return argparser.parse_args(args)
+    return parser.parse_args(args)
 
+
+def dpanonymize(args):
     if args.phoenix_root:
         in_dict = {'phoenix_root': args.phoenix_root, 'BIDS': args.bids}
-        bpan.lock_lochness(in_dict, args.Datatype)
+        dpanon.lock_lochness(in_dict, args.datatype)
 
     else:
         if args.in_file:
-            lock_file(args.in_file, args.out_file, args.bids)
+            lock_file(args.in_file, args.out_file, args.datatype)
 
         if args.in_dir:
-            lock_directory(args.in_file, args.out_file, args.bids)
+            lock_directory(args.in_dir, args.out_dir, args.datatype)
+
+if __name__ == '__main__':
+    args = parse_args(sys.argv[1:])
+    dpanonymize(args)
 
