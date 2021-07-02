@@ -14,6 +14,7 @@ sys.path.append(str(test_dir))
 
 
 from dpanonymize_test import phoenix_structure, phoenix_structure_BIDS
+from dpanonymize_test import phoenix_structure_BIDS_processed
 from dpanonymize_test import Lochness_fake_object, show_tree_then_delete
 
 
@@ -45,5 +46,13 @@ def test_dpanonymize_module_BIDS(phoenix_structure_BIDS):
     Lochness = Lochness_fake_object('tmp_phoenix')
     Lochness['BIDS'] = True
     dpanonymize.lock_lochness(Lochness, module='survey')
+
+    show_tree_then_delete('tmp_phoenix')
+
+
+def test_dpanonymize_processed_raw_mixed_BIDS(phoenix_structure_BIDS_processed):
+    Lochness = Lochness_fake_object('tmp_phoenix')
+    Lochness['BIDS'] = True
+    dpanonymize.lock_lochness(Lochness)
 
     show_tree_then_delete('tmp_phoenix')

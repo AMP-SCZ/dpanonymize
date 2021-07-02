@@ -29,7 +29,8 @@ class PhoenixStructure(object):
 
                 if self.bids:
                     survey_dir = study_dir / 'survey' / 'processed' / subject \
-                        if processed else study_dir / 'survey' / 'raw' / subject
+                        if processed else \
+                        study_dir / 'survey' / 'raw' / subject
                     survey_dir.mkdir(exist_ok=True, parents=True)
                     subject_json = survey_dir / (f'{subject}.{study}.json')
 
@@ -117,6 +118,17 @@ def phoenix_structure_BIDS():
     phoenix_structure.create_fake_protected_redcap()
     phoenix_structure.create_fake_repo('mri', 'dcm')
     phoenix_structure.create_fake_repo('interviews', 'mp4')
+    phoenix_structure.create_fake_repo('actigraphy', 'csv')
+
+
+@pytest.fixture
+def phoenix_structure_BIDS_processed():
+    phoenix_root = 'tmp_phoenix'
+    phoenix_structure = PhoenixStructure(phoenix_root, BIDS=True)
+    phoenix_structure.create_fake_protected_redcap()
+    phoenix_structure.create_fake_repo('mri', 'dcm')
+    phoenix_structure.create_fake_repo('interviews', 'mp4')
+    phoenix_structure.create_fake_repo('interviews', 'mp4', True)
     phoenix_structure.create_fake_repo('actigraphy', 'csv')
 
 
