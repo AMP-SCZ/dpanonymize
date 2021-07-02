@@ -1,12 +1,14 @@
+#!/usr/bin/env python
+
 from pathlib import Path
 import argparse as ap
 from typing import Union, List
-from bpanonymize import dtype_module_dict
-import bpanonymize as bpan
+from dpanonymize import dtype_module_dict
+import dpanonymize as bpan
 
 '''
-bpanonymize is designed to be executed from lochness, but this simple shell
-executable script is added to use PII removal functionalities of bpanonymize
+dpanonymize is designed to be executed from lochness, but this simple shell
+executable script is added to use PII removal functionalities of dpanonymize
 from shell.
 '''
 
@@ -45,7 +47,7 @@ def lock_directory(in_dir: Union[Path, str],
 
 
 if __name__ == '__main__':
-    parser = ap.ArgumentParser(description='bpanonymize: PII remover')
+    parser = ap.ArgumentParser(description='dpanonymize: PII remover')
 
     parser.add_argument('-p', '--phoenix_root',
                         help='Root of PHOENIX directory. If this option is '
@@ -59,7 +61,7 @@ if __name__ == '__main__':
                         help='A directory to remove PII from')
     parser.add_argument('-od', '--out_dir',
                         help='PII removed output dir path')
-    parser.add_argument('-d', '--datatype',
+    parser.add_argument('-dt', '--datatype',
                         required=True,
                         help='Datatype to remove PII (applies to -p, -i).')
 
