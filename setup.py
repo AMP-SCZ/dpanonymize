@@ -12,7 +12,7 @@ test_requirements = [
 ]
 
 about = dict()
-with open(os.path.join(here, 'bpanonymize', '__version__.py'), 'r') as f:
+with open(os.path.join(here, 'dpanonymize', '__version__.py'), 'r') as f:
     exec(f.read(), about)
 
 setup(

@@ -1,4 +1,4 @@
-import bpanonymize
+import dpanonymize
 from pathlib import Path
 import pandas as pd
 import tempfile
@@ -8,20 +8,20 @@ import os
 import shutil
 
 import sys
-bpanonymize_root = Path(bpanonymize.__path__[0]).parent
-scripts_dir = bpanonymize_root / 'scripts'
-test_dir = bpanonymize_root / 'tests'
+dpanonymize_root = Path(dpanonymize.__path__[0]).parent
+scripts_dir = dpanonymize_root / 'scripts'
+test_dir = dpanonymize_root / 'tests'
 sys.path.append(str(scripts_dir))
 sys.path.append(str(test_dir))
 
 
-from bpanonymize_test import phoenix_structure, phoenix_structure_BIDS
-from bpanonymize_test import Lochness_fake_object, show_tree_then_delete
+from dpanonymize_test import phoenix_structure, phoenix_structure_BIDS
+from dpanonymize_test import Lochness_fake_object, show_tree_then_delete
 
 from bpanon import lock_file, lock_directory
 
 
-def test_bpanonymize_a_file():
+def test_dpanonymize_a_file():
     for datatype in 'mri', 'survey', 'audio', 'video', 'actigraphy':
         in_file = Path(f'{datatype}_temp_file.dcm')
         in_file.touch()
@@ -36,7 +36,7 @@ def test_bpanonymize_a_file():
 
 
 
-def test_bpanonymize_a_directory():
+def test_dpanonymize_a_directory():
     for datatype in 'mri', 'survey', 'audio', 'video', 'actigraphy':
         temp_dir = Path(f'{datatype}_raw_dir')
         temp_dir.mkdir(exist_ok=True)
