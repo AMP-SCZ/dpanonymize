@@ -27,7 +27,7 @@ setup(
         '': ['*.yaml', '*.html']
     },
     scripts=[
-        'scripts/anonymize_phoenix.py',
+        'scripts/dpanon.py',
     ],
     install_requires=requires,
     tests_require=test_requirements
