@@ -4,6 +4,12 @@
 to work with `lochness` on a PHOENIX structured data, but it also has
 functionalities to take separate file and folder with predefined datatype.
 
+   * [Installation](#installation)
+   * [Debugging](#debugging)
+   * [Tests](#tests)
+   * [Running](#running)
+   * [Documentation](#documentation)
+
 
 ## Installation
 
