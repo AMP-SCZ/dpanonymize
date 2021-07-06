@@ -76,7 +76,8 @@ dpanon.py \
 ```
 
 - Execute PII removal on a directory where there are multiple files of same data type
-    - This applies PII removal on all files under the given directory.
+
+  This applies PII removal on all files under the given directory.
 ```
 dpanon.py \
     --in_dir /path/to/survey/directory \
