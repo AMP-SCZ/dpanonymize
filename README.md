@@ -1,4 +1,4 @@
-# DPANONYMIZE
+# dpanonymize
 
 `dpanonymize` is a PII removal tool for given data types. It's mainly designed
 to work with `lochness` on a PHOENIX structured data, but it also has
@@ -10,7 +10,7 @@ TO BE UPDATED
 
 ## Contents
 1. [Installation](#installation)
-2. [How to run](#how_to_run)
+2. [How to run](#how-to-run)
 3. [Documentation](http://docs.neuroinfo.org/lochness/en/latest/)
 
 
@@ -49,7 +49,7 @@ pip install git+https://github.com/AMP-SCZ/lochness
 
 ```
 cd dpanonymize/tests
-bash dpanonymize_test.sh
+./dpanonymize_test.sh
 ```
 
 
