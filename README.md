@@ -16,34 +16,36 @@ TO BE UPDATED
 
 ## Installation
 
-Just use `pip`
+Just use `pip`:
 
 ```
 pip install dpanonymize
 ```
 
 
-For most recent DPACC-lochness
+For most recent DPACC-lochness:
 
 ```
 pip install git+https://github.com/AMP-SCZ/dpanonymize
 ```
 
 
-For debugging
+For debugging:
 
 ```
 cd ~
 git clone https://github.com/AMP-SCZ/dpanonymize
-pip install -r ~/dpanonymize/requirements.txt
-
-export PATH=${PATH}:~/dpanonymize/scripts  # add to ~/.bashrc
-export PYTHONPATH=${PYTHONPATH}:~/dpanonymize  # add to ~/.bashrc
+cd dpanonymize
+pip install .
 ```
 
+If you do not have `lochness` installed already:
+
+```
+pip install git+https://github.com/AMP-SCZ/lochness
+```
 
 ## Running test
-
 
 ```
 cd dpanonymize/tests
