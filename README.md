@@ -5,15 +5,6 @@ to work with `lochness` on a PHOENIX structured data, but it also has
 functionalities to take separate file and folder with predefined datatype.
 
 
-
-TO BE UPDATED
-
-## Contents
-1. [Installation](#installation)
-2. [How to run](#how-to-run)
-3. [Documentation](http://docs.neuroinfo.org/lochness/en/latest/)
-
-
 ## Installation
 
 Just use `pip`:
@@ -30,7 +21,7 @@ pip install git+https://github.com/AMP-SCZ/dpanonymize
 ```
 
 
-For debugging:
+## Debugging
 
 ```
 cd ~
@@ -45,7 +36,7 @@ If you do not have `lochness` installed already:
 pip install git+https://github.com/AMP-SCZ/lochness
 ```
 
-## Running test
+## Tests
 
 ```
 cd dpanonymize/tests
@@ -53,9 +44,11 @@ cd dpanonymize/tests
 ```
 
 
-## How to run
+## Running
 
 - Execute PII removal from `lochness`(`sync.py`)
+  
+  TBD
 
 - Execute PII removal on a PHOENIX folder
 ```
@@ -88,3 +81,5 @@ dpanon.py \
 
 
 ## Documentation
+
+TBD
