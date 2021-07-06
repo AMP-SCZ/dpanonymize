@@ -1,4 +1,4 @@
-__title__ = 'dpanonymize/'
+__title__ = 'dpanonymize'
 __description__ = 'PII remover'
 __url__ = 'https://github.com/AMP=SCZ/dpanonymize'
 __version__ = 'v0.1'
