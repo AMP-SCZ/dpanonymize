@@ -1,59 +1,60 @@
-# DPANONYMIZE
+# dpanonymize
 
 `dpanonymize` is a PII removal tool for given data types. It's mainly designed
 to work with `lochness` on a PHOENIX structured data, but it also has
 functionalities to take separate file and folder with predefined datatype.
 
-
-
-TO BE UPDATED
-
-## Contents
-1. [Installation](#installation)
-2. [How to run](#how_to_run)
-3. [Documentation](http://docs.neuroinfo.org/lochness/en/latest/)
+   * [Installation](#installation)
+   * [Debugging](#debugging)
+   * [Tests](#tests)
+   * [Running](#running)
+   * [Documentation](#documentation)
 
 
 ## Installation
 
-Just use `pip`
+Just use `pip`:
 
 ```
 pip install dpanonymize
 ```
 
 
-For most recent DPACC-lochness
+For most recent DPACC-lochness:
 
 ```
 pip install git+https://github.com/AMP-SCZ/dpanonymize
 ```
 
 
-For debugging
+## Debugging
 
 ```
 cd ~
 git clone https://github.com/AMP-SCZ/dpanonymize
-pip install -r ~/dpanonymize/requirements.txt
-
-export PATH=${PATH}:~/dpanonymize/scripts  # add to ~/.bashrc
-export PYTHONPATH=${PYTHONPATH}:~/dpanonymize  # add to ~/.bashrc
+cd dpanonymize
+pip install .
 ```
 
+If you do not have `lochness` installed already:
 
-## Running test
+```
+pip install git+https://github.com/AMP-SCZ/lochness
+```
 
+## Tests
 
 ```
 cd dpanonymize/tests
-bash dpanonymize_test.sh
+./dpanonymize_test.sh
 ```
 
 
-## How to run
+## Running
 
 - Execute PII removal from `lochness`(`sync.py`)
+  
+  TBD
 
 - Execute PII removal on a PHOENIX folder
 ```
@@ -74,7 +75,8 @@ dpanon.py \
 ```
 
 - Execute PII removal on a directory where there are multiple files of same data type
-    - This applies PII removal on all files under the given directory.
+
+  This applies PII removal on all files under the given directory.
 ```
 dpanon.py \
     --in_dir /path/to/survey/directory \
@@ -85,3 +87,5 @@ dpanon.py \
 
 
 ## Documentation
+
+TBD
