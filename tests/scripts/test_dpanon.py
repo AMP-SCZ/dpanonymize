@@ -143,3 +143,8 @@ def test_dir_only():
     with pytest.raises(SystemExit):
     # with datatype
         args = parse_args(['-d', 'tmp_dir'])
+
+
+def test_argparse(phoenix_structure_BIDS):
+    command = f'{scripts_dir}/dpanon.py -p tmp_phoenix -b'
+    print(os.popen(command).read())
