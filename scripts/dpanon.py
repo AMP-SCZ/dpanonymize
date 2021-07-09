@@ -47,7 +47,7 @@ def lock_directory(in_dir: Union[Path, str],
             module.remove_pii(in_file, out_file)
 
 
-def dpanonymize():
+def parse_args():
     '''Parse inputs coming from the terminal'''
     parser = ap.ArgumentParser(description='dpanonymize: PII remover')
 
@@ -76,6 +76,10 @@ def dpanonymize():
     if args.in_dir and args.datatype is None:
         parser.error('--in_file and --datatype always appear together')
     
+    return args
+
+
+def dpanonymize(args):
     if args.phoenix_root:
         in_dict = {'phoenix_root': args.phoenix_root, 'BIDS': args.bids}
         dpanon.lock_lochness(in_dict, args.datatype)
@@ -89,5 +93,6 @@ def dpanonymize():
 
 
 if __name__ == '__main__':
-    dpanonymize()
+    args = parse_args()
+    dpanonymize(args)
 
