@@ -65,7 +65,7 @@ def dpanonymize():
     parser.add_argument('-od', '--out_dir',
                         help='PII removed output dir path')
     parser.add_argument('-dt', '--datatype',
-			choices=['survey', 'video', 'audio', 'actigraphy', 'mri', 'eeg'],
+                        choices=['survey', 'video', 'audio', 'actigraphy', 'mri', 'eeg'],
                         help='Datatype to remove PII (applies to -p, -i).')
 
     args = parser.parse_args()
