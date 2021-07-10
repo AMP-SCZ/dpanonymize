@@ -147,3 +147,5 @@ def test_dir_only():
 
 def test_argparse(phoenix_structure_BIDS):
     command = f'{scripts_dir}/dpanon.py -p tmp_phoenix -b'
+    os.popen(command).read()
+    show_tree_then_delete('tmp_phoenix')
