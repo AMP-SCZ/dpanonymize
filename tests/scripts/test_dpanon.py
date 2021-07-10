@@ -23,7 +23,7 @@ from dpanon import lock_file, lock_directory, parse_args, dpanonymize
 
 
 def test_dpanonymize_a_file():
-    for datatype in 'mri', 'survey', 'audio', 'video', 'actigraphy':
+    for datatype in 'mri', 'surveys', 'audio', 'video', 'actigraphy':
         in_file = Path(f'{datatype}_temp_file.dcm')
         in_file.touch()
 
@@ -38,7 +38,7 @@ def test_dpanonymize_a_file():
 
 
 def test_dpanonymize_a_directory():
-    for datatype in 'mri', 'survey', 'audio', 'video', 'actigraphy':
+    for datatype in 'mri', 'surveys', 'audio', 'video', 'actigraphy':
         temp_dir = Path(f'{datatype}_raw_dir')
         temp_dir.mkdir(exist_ok=True)
         
@@ -58,14 +58,14 @@ def test_dpanonymize_a_directory():
 def test_parser():
     # with datatype
     args = parse_args(['-p', 'tmp_phoenix',
-                       '-dt', 'survey'])
+                       '-dt', 'surveys'])
     print(args)
 
 
 def test_phoenix_root_non_bids_with_dt(phoenix_structure):
     # with datatype
     args = parse_args(['-p', 'tmp_phoenix',
-                       '-dt', 'survey'])
+                       '-dt', 'surveys'])
 
     dpanonymize(args)
     show_tree_then_delete('tmp_phoenix')
@@ -74,7 +74,7 @@ def test_phoenix_root_non_bids_with_dt(phoenix_structure):
 def test_phoenix_root_bids_with_dt(phoenix_structure_BIDS):
     # with datatype
     args = parse_args(['-p', 'tmp_phoenix',
-                       '-dt', 'survey',
+                       '-dt', 'surveys',
                        '-b'])
 
     dpanonymize(args)
@@ -82,7 +82,7 @@ def test_phoenix_root_bids_with_dt(phoenix_structure_BIDS):
 
 
 def test_file_with_dt():
-    for datatype in 'mri', 'survey', 'audio', 'video', 'actigraphy':
+    for datatype in 'mri', 'surveys', 'audio', 'video', 'actigraphy':
         in_file = Path(f'{datatype}_temp_file.dcm')
         in_file.touch()
 
@@ -100,7 +100,7 @@ def test_file_with_dt():
 
 
 def test_dir_with_dt():
-    for datatype in 'mri', 'survey', 'audio', 'video', 'actigraphy':
+    for datatype in 'mri', 'surveys', 'audio', 'video', 'actigraphy':
         temp_dir = Path(f'{datatype}_raw_dir')
         temp_dir.mkdir(exist_ok=True)
         

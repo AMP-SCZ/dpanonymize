@@ -3,7 +3,7 @@ from pathlib import Path
 import os
 import re
 from typing import Union, List
-import dpanonymize.survey as SURVEY
+import dpanonymize.surveys as SURVEYS
 import dpanonymize.actigraphy as ACTIGRAPHY
 import dpanonymize.mri as MRI
 import dpanonymize.video as VIDEO
@@ -11,7 +11,7 @@ import dpanonymize.audio as AUDIO
 
 
 dtype_module_dict = {
-    'survey': SURVEY,
+    'surveys': SURVEYS,
     'actigraphy': ACTIGRAPHY,
     'mri': MRI,
     'interviews': VIDEO,
@@ -39,10 +39,9 @@ class FileInPhoenixBIDS(object):
                 - self.dtype: type of the data, str.
                 - self.general_path: path of the target GENERAL path, Path.
                 eg) self.file_path = 'PATH/PROTECTED/PATH/TO/FILE'
-                    self.dtype = 'survey'
+                    self.dtype = 'surveys'
                     fileInPhoenix.general_path = 'PATH/GENERAL/PATH/TO/FILE'
         '''
-        print(self.dtype)
         module = dtype_module_dict.get(self.dtype)
         module.remove_pii(self.file_path, self.general_path)
 

@@ -63,7 +63,7 @@ def read_pii_mapping_to_dict(pii_table_loc: str) -> pd.DataFrame:
 def load_raw_return_proc_json(json_loc: str,
                               pii_str_proc_dict: dict,
                               subject_id: str) -> List[dict]:
-    # load json in PROTECTED/survey/raw
+    # load json in PROTECTED/surveys/raw
     with open(json_loc, 'r') as f:
         raw_json = json.load(f)  # list of dicts
 
@@ -178,7 +178,7 @@ def load_raw_return_proc_csv(csv_loc: str,
                              pii_str_proc_dict: dict,
                              subject_id: str) -> List[dict]:
     '''CSV version of the load raw CSV and save processed CSV'''
-    # load csv in PROTECTED/survey/raw
+    # load csv in PROTECTED/surveys/raw
     raw_df_subject = pd.read_csv(csv_loc)
 
     for field_name in raw_df_subject.columns:
@@ -200,7 +200,7 @@ def load_raw_return_proc_csv(csv_loc: str,
 
 
 def process_and_copy_db(Lochness, subject, raw_input, proc_dst):
-    '''Process PII and copy the json to GENERAL/survey/processed'''
+    '''Process PII and copy the json to GENERAL/surveys/processed'''
     pii_table_loc = get_PII_table_loc(Lochness, subject.study)
 
     # don't run this if the pii_table in the config.yml is missing

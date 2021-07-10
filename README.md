@@ -63,15 +63,15 @@ dpanon.py --phoenix_root /path/to/PHOENIX
 
 # or you can also select which datatype to apply PII removal
 dpanon.py --phoenix_root /path/to/PHOENIX --datatype actigraphy
-dpanon.py --phoenix_root /path/to/PHOENIX --datatype survey
+dpanon.py --phoenix_root /path/to/PHOENIX --datatype surveys
 ```
 
 - Execute PII removal on a single file
 ```
 dpanon.py \
-    --in_file /path/to/survey/file \
+    --in_file /path/to/surveys/file \
     --out_file /path/to/PII_removed/file \
-    --datatype survey
+    --datatype surveys
 ```
 
 - Execute PII removal on a directory where there are multiple files of same data type
@@ -79,9 +79,9 @@ dpanon.py \
   This applies PII removal on all files under the given directory.
 ```
 dpanon.py \
-    --in_dir /path/to/survey/directory \
+    --in_dir /path/to/surveys/directory \
     --out_dir /path/to/PII_removed/directory \
-    --datatype survey
+    --datatype surveys
 ```
 
 

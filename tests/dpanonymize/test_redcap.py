@@ -15,10 +15,10 @@ sys.path.append(str(test_dir))
 from dpanonymize_test import phoenix_structure, phoenix_structure_BIDS
 from dpanonymize_test import Lochness_fake_object, show_tree_then_delete
 
-from dpanonymize.survey import read_pii_mapping_to_dict
-from dpanonymize.survey import load_raw_return_proc_json
-from dpanonymize.survey import process_pii_string
-from dpanonymize.survey import get_shuffle_dict_for_type
+from dpanonymize.surveys import read_pii_mapping_to_dict
+from dpanonymize.surveys import load_raw_return_proc_json
+from dpanonymize.surveys import process_pii_string
+from dpanonymize.surveys import get_shuffle_dict_for_type
 
 
 def test_survey_simple(phoenix_structure):

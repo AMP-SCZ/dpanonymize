@@ -22,7 +22,7 @@ def lock_file(in_file: Union[Path, str],
         - in_file: input file path, Path or str
         - out_file: path to save the PII removed file, Path or str
         - datatype: datatype that this in_file belongs to, str
-            - 'survey', 'video', 'audio', 'actigraphy', 'mri', 'eeg'
+            - 'surveys', 'video', 'audio', 'actigraphy', 'mri', 'eeg'
     '''
     module = dtype_module_dict.get(datatype)
     module.remove_pii(in_file, out_file)
@@ -37,7 +37,7 @@ def lock_directory(in_dir: Union[Path, str],
         - in_file: input directory path, Path or str
         - out_file: directory to save the PII removed file, Path or str
         - datatype: datatype that all of the files belongs to, str
-            - 'survey', 'video', 'audio', 'actigraphy', 'mri', 'eeg'
+            - 'surveys', 'video', 'audio', 'actigraphy', 'mri', 'eeg'
     '''
     module = dtype_module_dict.get(datatype)
 

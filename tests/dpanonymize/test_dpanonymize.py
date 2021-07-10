@@ -37,7 +37,7 @@ def test_dpanonymize_BIDS(phoenix_structure_BIDS):
 def test_dpanonymize_module_nonBIDS(phoenix_structure):
     Lochness = Lochness_fake_object('tmp_phoenix')
     Lochness['BIDS'] = False
-    dpanonymize.lock_lochness(Lochness, module='survey')
+    dpanonymize.lock_lochness(Lochness, module='surveys')
 
     show_tree_then_delete('tmp_phoenix')
 
@@ -45,7 +45,7 @@ def test_dpanonymize_module_nonBIDS(phoenix_structure):
 def test_dpanonymize_module_BIDS(phoenix_structure_BIDS):
     Lochness = Lochness_fake_object('tmp_phoenix')
     Lochness['BIDS'] = True
-    dpanonymize.lock_lochness(Lochness, module='survey')
+    dpanonymize.lock_lochness(Lochness, module='surveys')
 
     show_tree_then_delete('tmp_phoenix')
 

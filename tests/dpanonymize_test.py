@@ -28,9 +28,9 @@ class PhoenixStructure(object):
                 study_dir = self.protected_folder / study
 
                 if self.bids:
-                    survey_dir = study_dir / 'survey' / 'processed' / subject \
+                    survey_dir = study_dir / 'surveys' / 'processed' / subject \
                         if processed else \
-                        study_dir / 'survey' / 'raw' / subject
+                        study_dir / 'surveys' / 'raw' / subject
                     survey_dir.mkdir(exist_ok=True, parents=True)
                     subject_json = survey_dir / (f'{subject}.{study}.json')
 
@@ -44,9 +44,9 @@ class PhoenixStructure(object):
                         json.dump(d, f)
 
                 else:
-                    survey_dir = study_dir / subject / 'survey' / 'processed' \
+                    survey_dir = study_dir / subject / 'surveys' / 'processed' \
                             if processed else \
-                            study_dir / subject / 'survey' / 'raw'
+                            study_dir / subject / 'surveys' / 'raw'
 
                     survey_dir.mkdir(exist_ok=True, parents=True)
                     subject_json = survey_dir / (f'{subject}.{study}.json')
