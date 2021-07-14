@@ -24,8 +24,8 @@ class FileInPhoenixBIDS(object):
     '''PHOENIX file class used to grab file information'''
     def __init__(self, file_path):
         self.file_path = Path(file_path)
-        self.subject = self.file_path.parent.name
-        self.dtype = self.file_path.parent.parent.parent.name
+        self.dtype = self.file_path.parent.name
+        self.subject = self.file_path.parent.parent.name
         self.study = self.file_path.parent.parent.parent.parent.name
         self.general_path = re.sub('/PROTECTED/', '/GENERAL/',
                                    str(self.file_path))
@@ -54,7 +54,7 @@ class FileInPhoenix(FileInPhoenixBIDS):
     def __init__(self, file_path):
         super().__init__(file_path)
         self.dtype = self.file_path.parent.parent.name
-        self.subject = self.file_path.parent.parent.name
+        self.subject = self.file_path.parent.parent.parent.name
 
 
 def get_file_objects_from_phoenix(root_dir: Union[Path, str],

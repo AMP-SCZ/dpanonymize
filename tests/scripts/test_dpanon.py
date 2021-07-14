@@ -109,7 +109,7 @@ def test_dir_with_dt():
 
         out_dir = Path(f'{datatype}_pii_removed_dir')
 
-        args = parse_args(['-d', str(temp_dir),
+        args = parse_args(['-id', str(temp_dir),
                            '-od', str(out_dir),
                            '-dt', datatype])
         dpanonymize(args)
@@ -142,7 +142,7 @@ def test_file_only():
 def test_dir_only():
     with pytest.raises(SystemExit):
     # with datatype
-        args = parse_args(['-d', 'tmp_dir'])
+        args = parse_args(['-id', 'tmp_dir'])
 
 
 def test_argparse(phoenix_structure_BIDS):
