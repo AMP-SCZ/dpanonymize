@@ -60,7 +60,7 @@ def parse_args(argv):
     parser.add_argument('-i', '--in_file', help='A file to remove PII from')
     parser.add_argument('-o', '--out_file',
                         help='PII removed output file path')
-    parser.add_argument('-d', '--in_dir',
+    parser.add_argument('-id', '--in_dir',
                         help='A directory to remove PII from')
     parser.add_argument('-od', '--out_dir',
                         help='PII removed output dir path')
