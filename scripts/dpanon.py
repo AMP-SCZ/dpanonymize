@@ -65,6 +65,7 @@ def parse_args(argv):
     parser.add_argument('-od', '--out_dir',
                         help='PII removed output dir path')
     parser.add_argument('-dt', '--datatype',
+                        choices=['surveys', 'video', 'audio', 'actigraphy', 'mri', 'eeg'],
                         help='Datatype to remove PII (applies to -p, -i).')
 
     args = parser.parse_args(argv)

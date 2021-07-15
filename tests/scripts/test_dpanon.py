@@ -122,12 +122,12 @@ def test_dir_with_dt():
 
 def test_phoenix_root_bids_with_wrong_dt(phoenix_structure_BIDS):
     # with datatype
-    args = parse_args(['-p', 'tmp_phoenix',
-                       '-dt', 'haha',
-                       '-b'])
+    with pytest.raises(SystemExit):
+        args = parse_args(['-p', 'tmp_phoenix',
+                           '-dt', 'haha',
+                           '-b'])
 
-    dpanonymize(args)
-    show_tree_then_delete('tmp_phoenix')
+        dpanonymize(args)
 
 
 def test_phoenix_root_only():
