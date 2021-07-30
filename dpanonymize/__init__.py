@@ -30,7 +30,7 @@ class FileInPhoenixBIDS(object):
         self.general_path = re.sub('/PROTECTED/', '/GENERAL/',
                                    str(self.file_path))
 
-    def anonymize(self) -> None:
+    def anonymize(self, **kwargs) -> None:
         '''Remove PII from the fileInPhoenix object
 
         Key arguments:
@@ -43,7 +43,20 @@ class FileInPhoenixBIDS(object):
                     fileInPhoenix.general_path = 'PATH/GENERAL/PATH/TO/FILE'
         '''
         module = dtype_module_dict.get(self.dtype)
-        module.remove_pii(self.file_path, self.general_path)
+
+        if self.dtype == 'surveys':
+            pii_table_loc = kwargs.get(
+                'pii_table_loc',
+                self.file_path.parent.parent.parent.parent.parent.parent / \
+                        'pii_table.csv')
+
+            module.process_and_copy_db(
+                    pii_table_loc,
+                    self.subject,
+                    self.file_path,
+                    self.general_path)
+        else:
+            module.remove_pii(self.file_path, self.general_path)
 
     def __repr__(self):
         return f"<{self.file_path.name}>"
@@ -89,7 +102,7 @@ def get_file_objects_from_module(root_dir: Union[Path, str],
         - module: name of the module to remove PII from, str.
         - BIDS: True if the PHOENIX is in BIDS structure, bool.
     '''
-    module_dirs = list(root_dir.glob(f'*/{module}')) if BIDS else \
+    module_dirs = list(root_dir.glob(f'*/*/*/{module}')) if BIDS else \
         list(root_dir.glob(f'*/*/{module}'))
 
     protected_files = []
@@ -99,7 +112,8 @@ def get_file_objects_from_module(root_dir: Union[Path, str],
     return protected_files
 
 
-def lock_lochness(Lochness: 'Lochness', module: str = None) -> None:
+def lock_lochness(Lochness: 'Lochness',
+                  module: str = None, **kwargs) -> None:
     '''Lock PII using information from Lochness object
 
     Requirements:
@@ -107,6 +121,11 @@ def lock_lochness(Lochness: 'Lochness', module: str = None) -> None:
                     It needs to have 'phoenix_root' (str) and 'BIDS' (bool).
                     eg) Lochness['phoenix_root'] = '/PATH/TO/PHOENIX'
                         Lochness['BIDS'] = True
+        - module: name of the datatype to remove PII from, str.
+        - expected kwargs:
+            - pii_table: Path of the pii process table, which will be used
+                         in processing survey data, str.
+
     '''
     phoenix_root = Path(Lochness['phoenix_root'])
     protected_root = phoenix_root / 'PROTECTED'
@@ -115,8 +134,7 @@ def lock_lochness(Lochness: 'Lochness', module: str = None) -> None:
     file_object_list = get_file_objects_from_phoenix(protected_root, bids) \
         if module is None else \
         get_file_objects_from_module(protected_root, module, bids)
-
+    
     for file_object in file_object_list:
-        file_object.anonymize()
-
+        file_object.anonymize(**kwargs)
 
