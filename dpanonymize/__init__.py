@@ -8,6 +8,7 @@ import dpanonymize.actigraphy as ACTIGRAPHY
 import dpanonymize.mri as MRI
 import dpanonymize.video as VIDEO
 import dpanonymize.audio as AUDIO
+import dpanonymize.eeg as EEG
 
 
 dtype_module_dict = {
@@ -16,7 +17,8 @@ dtype_module_dict = {
     'mri': MRI,
     'interviews': VIDEO,
     'audio': AUDIO,
-    'video': VIDEO
+    'video': VIDEO,
+    'eeg': EEG
 }
 
 
@@ -59,7 +61,7 @@ class FileInPhoenixBIDS(object):
             module.remove_pii(self.file_path, self.general_path)
 
     def __repr__(self):
-        return f"<{self.file_path.name}>"
+        return f"<{self.file_path.name} {self.dtype}"
 
 
 class FileInPhoenix(FileInPhoenixBIDS):
