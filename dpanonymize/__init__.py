@@ -45,10 +45,7 @@ class FileInPhoenixBIDS(object):
         module = dtype_module_dict.get(self.dtype)
 
         if self.dtype == 'surveys':
-            pii_table_loc = kwargs.get(
-                'pii_table_loc',
-                self.file_path.parent.parent.parent.parent.parent.parent / \
-                        'pii_table.csv')
+            pii_table_loc = kwargs.get('pii_table_loc', False)
 
             module.process_and_copy_db(
                     pii_table_loc,
