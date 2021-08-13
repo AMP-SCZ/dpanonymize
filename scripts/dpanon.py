@@ -80,7 +80,7 @@ def parse_args(argv):
             choices=['surveys', 'video', 'audio', 'actigraphy', 'mri', 'eeg'],
             help='Datatype to remove PII (applies to -p, -i).')
     parser.add_argument(
-            '-ptl', '--pii_table_loc', default=False,
+            '-pt', '--pii_table_loc', default=False,
             help='Location of PII table for survey data processing')
 
     args = parser.parse_args(argv)

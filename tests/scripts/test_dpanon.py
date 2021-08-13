@@ -66,7 +66,7 @@ def test_phoenix_root_non_bids_with_dt(phoenix_structure):
     args = parse_args(
             ['-p', 'tmp_phoenix',
              '-dt', 'surveys',
-             '-ptl', '/Users/kc244/dpanonymize/tests/pii_convert.csv'])
+             '-pt', '/Users/kc244/dpanonymize/tests/pii_convert.csv'])
 
     dpanonymize(args)
     show_tree_then_delete('tmp_phoenix')
@@ -77,7 +77,7 @@ def test_phoenix_root_bids_with_dt(phoenix_structure_BIDS):
     args = parse_args(
             ['-p', 'tmp_phoenix',
              '-dt', 'surveys',
-             '-ptl', '/Users/kc244/dpanonymize/tests/pii_convert.csv',
+             '-pt', '/Users/kc244/dpanonymize/tests/pii_convert.csv',
              '-b'])
 
     dpanonymize(args)
@@ -95,7 +95,7 @@ def test_file_with_dt():
         args = parse_args(
                 ['-i', str(in_file),
                  '-o', str(pii_removed_file),
-                 '-ptl', '/Users/kc244/dpanonymize/tests/pii_convert.csv',
+                 '-pt', '/Users/kc244/dpanonymize/tests/pii_convert.csv',
                  '-dt', datatype])
         dpanonymize(args)
         assert pii_removed_file.is_file()
@@ -117,7 +117,7 @@ def test_dir_with_dt():
         args = parse_args(
                 ['-id', str(temp_dir),
                  '-od', str(out_dir),
-                 '-ptl', '/Users/kc244/dpanonymize/tests/pii_convert.csv',
+                 '-pt', '/Users/kc244/dpanonymize/tests/pii_convert.csv',
                  '-dt', datatype])
         dpanonymize(args)
         assert out_dir.is_dir()
