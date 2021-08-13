@@ -208,7 +208,7 @@ def process_and_copy_db(pii_table_loc: Union[str, Path], subject_name: str,
         proc_dst: processed data out destination, str or Path.
     '''
     # don't run this if the pii_table in the config.yml is missing
-    if pii_table_loc is not False and pii_table_loc != '':
+    if pii_table_loc:
         # make output directory
         Path(proc_dst).parent.mkdir(exist_ok=True, parents=True)
 
