@@ -8,6 +8,7 @@ import dpanonymize.actigraphy as ACTIGRAPHY
 import dpanonymize.mri as MRI
 import dpanonymize.video as VIDEO
 import dpanonymize.audio as AUDIO
+import pandas as pd
 
 
 dtype_module_dict = {
@@ -46,7 +47,6 @@ class FileInPhoenixBIDS(object):
 
         if self.dtype == 'surveys':
             pii_table_loc = kwargs.get('pii_table_loc', False)
-
             module.process_and_copy_db(
                     pii_table_loc,
                     self.subject,
@@ -128,10 +128,23 @@ def lock_lochness(Lochness: 'Lochness',
     protected_root = phoenix_root / 'PROTECTED'
     bids = Lochness['BIDS'] if 'BIDS' in Lochness else False
 
+    pii_table_loc = kwargs.get('pii_table_loc', False)
+    if not pii_table_loc:
+        df = pd.DataFrame({
+            'pii_label_string': [
+                'address', 'phone_number', 'date',
+                'patient_name', 'subject_name'],
+            'process': [
+                'remove', 'random_number', 'change_date',
+                'random_string', 'replace_with_subject_id']
+            })
+        pii_table_loc = phoenix_root.parent / 'pii_convert.csv'
+        df.to_csv(pii_table_loc)
+
     file_object_list = get_file_objects_from_phoenix(protected_root, bids) \
         if module is None else \
         get_file_objects_from_module(protected_root, module, bids)
     
     for file_object in file_object_list:
-        file_object.anonymize(**kwargs)
+        file_object.anonymize(pii_table_loc=pii_table_loc, **kwargs)
 
