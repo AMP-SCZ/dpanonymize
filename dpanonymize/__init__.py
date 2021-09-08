@@ -72,8 +72,8 @@ def get_file_objects_from_phoenix(root_dir: Union[Path, str],
     '''Search all files under phoenix and get a list of FileInPhoenix objects
 
     Key Arguments
-        - root_dir: root of PHOENIX directory structure to search files
-                          from, Path or str.
+        - root_dir: 'PROTECTED' directory PHOENIX structure to search files
+                    which is used in creating FileInPhoenix objects, str.
         - BIDS: True if the PHOENIX is in BIDS structure, bool.
     '''
     protected_files = []
@@ -94,8 +94,8 @@ def get_file_objects_from_module(root_dir: Union[Path, str],
     '''Search all files under phoenix and get a list of FileInPhoenix objects
 
     Key Arguments:
-        - root_dir: root of PHOENIX directory structure to search files
-                          from, Path or str.
+        - root_dir: 'PROTECTED' directory of PHOENIX structure to search files
+                    which is used in creating FileInPhoenix objects, str.
         - module: name of the module to remove PII from, str.
         - BIDS: True if the PHOENIX is in BIDS structure, bool.
     '''
@@ -141,6 +141,9 @@ def lock_lochness(Lochness: 'Lochness',
         pii_table_loc = phoenix_root.parent / 'pii_convert.csv'
         df.to_csv(pii_table_loc)
 
+    # get_file_objects_from_phoenix and get_file_objects_from_module takes
+    # PROTECTED path, but FileInPhoenixBIDS and FileInPhoenix are designed
+    # to set both GENERAL & PROTECTED paths.
     file_object_list = get_file_objects_from_phoenix(protected_root, bids) \
         if module is None else \
         get_file_objects_from_module(protected_root, module, bids)
