@@ -72,8 +72,8 @@ def get_file_objects_from_phoenix(root_dir: Union[Path, str],
     '''Search all files under phoenix and get a list of FileInPhoenix objects
 
     Key Arguments
-        - root_dir: 'PROTECTED' directory PHOENIX structure to search files
-                    which is used in creating FileInPhoenix objects, str.
+        - root_dir: 'PROTECTED' directory of PHOENIX structure to search files
+                    which are used to create FileInPhoenix objects, str.
         - BIDS: True if the PHOENIX is in BIDS structure, bool.
     '''
     protected_files = []
@@ -95,7 +95,7 @@ def get_file_objects_from_module(root_dir: Union[Path, str],
 
     Key Arguments:
         - root_dir: 'PROTECTED' directory of PHOENIX structure to search files
-                    which is used in creating FileInPhoenix objects, str.
+                    which are used to create FileInPhoenix objects, str.
         - module: name of the module to remove PII from, str.
         - BIDS: True if the PHOENIX is in BIDS structure, bool.
     '''
