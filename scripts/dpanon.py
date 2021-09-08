@@ -5,6 +5,7 @@ import argparse as ap
 import sys
 from typing import Union, List
 from dpanonymize import dtype_module_dict
+import dpanonymize.surveys as SURVEYS
 import dpanonymize as dpanon
 
 '''
@@ -30,7 +31,7 @@ def lock_file(in_file: Union[Path, str],
 
 def lock_directory(in_dir: Union[Path, str],
                    out_dir: Union[Path, str],
-                   datatype: str) -> None:
+                   datatype: str, **kwargs) -> None:
     '''Remove PII from all files under a directory
 
     Requirements:
@@ -44,7 +45,17 @@ def lock_directory(in_dir: Union[Path, str],
     for in_file in Path(in_dir).glob('*'):
         if in_file.is_file():
             out_file = Path(out_dir) / in_file.name
-            module.remove_pii(in_file, out_file)
+            if datatype == 'surveys':
+                pii_table_loc = kwargs.get('pii_table_loc', False)
+                # using the file name without extension as the subject_id input
+                # for the process_and_copy_db function
+                SURVEYS.process_and_copy_db(
+                        pii_table_loc,
+                        in_file.name.split('.')[0],
+                        in_file,
+                        out_file)
+            else:
+                module.remove_pii(in_file, out_file)
 
 
 def parse_args(argv):
@@ -64,9 +75,13 @@ def parse_args(argv):
                         help='A directory to remove PII from')
     parser.add_argument('-od', '--out_dir',
                         help='PII removed output dir path')
-    parser.add_argument('-dt', '--datatype',
-                        choices=['surveys', 'video', 'audio', 'actigraphy', 'mri', 'eeg'],
-                        help='Datatype to remove PII (applies to -p, -i).')
+    parser.add_argument(
+            '-dt', '--datatype',
+            choices=['surveys', 'video', 'audio', 'actigraphy', 'mri', 'eeg'],
+            help='Datatype to remove PII (applies to -p, -i).')
+    parser.add_argument(
+            '-pt', '--pii_table_loc', default=False,
+            help='Location of PII table for survey data processing')
 
     args = parser.parse_args(argv)
 
@@ -75,21 +90,31 @@ def parse_args(argv):
 
     if args.in_dir and args.datatype is None:
         parser.error('--in_file and --datatype always appear together')
-    
+
     return args
 
 
 def dpanonymize(args):
     if args.phoenix_root:
         in_dict = {'phoenix_root': args.phoenix_root, 'BIDS': args.bids}
-        dpanon.lock_lochness(in_dict, args.datatype)
+        dpanon.lock_lochness(in_dict, args.datatype,
+                             pii_table_loc=args.pii_table_loc)
 
     else:
         if args.in_file:
-            lock_file(args.in_file, args.out_file, args.datatype)
+            if args.datatype == 'surveys':
+                print('hahah')
+                SURVEYS.process_and_copy_db(
+                        args.pii_table_loc,
+                        Path(args.in_file).name.split('.')[0],
+                        args.in_file,
+                        args.out_file)
+            else:
+                lock_file(args.in_file, args.out_file, args.datatype)
 
         if args.in_dir:
-            lock_directory(args.in_dir, args.out_dir, args.datatype)
+            lock_directory(args.in_dir, args.out_dir, args.datatype,
+                           pii_table_loc=args.pii_table_loc)
 
 
 if __name__ == '__main__':

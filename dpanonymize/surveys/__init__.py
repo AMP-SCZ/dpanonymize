@@ -9,14 +9,7 @@ from typing import Union, List
 import re
 import sys
 import shutil
-
-
-def remove_pii(data_in: Union[str, Path], data_out: Union[str, Path]):
-    '''Remove PII from actigraphy data - place holder'''
-    if not Path(data_out).parent.is_dir():
-        Path(data_out).parent.mkdir(parents=True, exist_ok=True)
-    shutil.copy(data_in, data_out)
-
+from json import JSONDecodeError
 
 class PiiTableError(Exception):
     pass
@@ -65,9 +58,13 @@ def load_raw_return_proc_json(json_loc: str,
                               subject_id: str) -> List[dict]:
     # load json in PROTECTED/surveys/raw
     with open(json_loc, 'r') as f:
-        raw_json = json.load(f)  # list of dicts
+        try:
+            raw_json = json.load(f)  # list of dicts
+            processed_json = []
+        except JSONDecodeError: # when the raw json file is empty or broken
+            raw_json = []
+            processed_json = [{'note':'raw_file_was_empty_or_broken'}]
 
-    processed_json = []
     for instrument in raw_json:
         processed_instrument = {}
         for field_name, field_value in instrument.items():
@@ -199,18 +196,28 @@ def load_raw_return_proc_csv(csv_loc: str,
     return raw_df_subject
 
 
-def process_and_copy_db(Lochness, subject, raw_input, proc_dst):
-    '''Process PII and copy the json to GENERAL/surveys/processed'''
-    pii_table_loc = get_PII_table_loc(Lochness, subject.study)
+def process_and_copy_db(pii_table_loc: Union[str, Path], subject_name: str,
+                        raw_input: Union[str, Path],
+                        proc_dst: Union[str, Path]):
+    '''Process PII and copy the json to GENERAL/surveys/processed
 
+    Key Arguments:
+        pii_table_loc: path of the pii table, str or Path.
+        subject_name: subject name to be used in the string replacement, str.
+        raw_input: raw data in, str or Path.
+        proc_dst: processed data out destination, str or Path.
+    '''
     # don't run this if the pii_table in the config.yml is missing
-    if pii_table_loc != False and pii_table_loc != '':
+    if pii_table_loc:
+        # make output directory
+        Path(proc_dst).parent.mkdir(exist_ok=True, parents=True)
+
         # process PII here
         pii_str_proc_dict = read_pii_mapping_to_dict(pii_table_loc)
 
         if str(raw_input).endswith('json'):
             processed_content = load_raw_return_proc_json(
-                    raw_input, pii_str_proc_dict, subject.id)
+                    raw_input, pii_str_proc_dict, subject_name)
 
             # double check the pii string processing dict once more
             # if it's empty, don't copy it over to general
@@ -219,13 +226,15 @@ def process_and_copy_db(Lochness, subject, raw_input, proc_dst):
 
         elif str(raw_input).endswith('csv'):
             processed_df = load_raw_return_proc_csv(
-                    raw_input, pii_str_proc_dict, subject.id)
+                    raw_input, pii_str_proc_dict, subject_name)
 
             # double check the pii string processing dict once more
             # if it's empty, don't copy it over to general
             if pii_str_proc_dict != {}:
                 processed_df.to_csv(proc_dst, index=False)
-
+    else:
+        raise PiiTableError('Please provide correct location of the PII '
+                            'process table')
 
 
 def get_PII_table_loc(Lochness, study):

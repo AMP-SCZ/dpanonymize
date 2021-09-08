@@ -8,6 +8,7 @@ import dpanonymize.actigraphy as ACTIGRAPHY
 import dpanonymize.mri as MRI
 import dpanonymize.video as VIDEO
 import dpanonymize.audio as AUDIO
+import pandas as pd
 
 
 dtype_module_dict = {
@@ -30,7 +31,7 @@ class FileInPhoenixBIDS(object):
         self.general_path = re.sub('/PROTECTED/', '/GENERAL/',
                                    str(self.file_path))
 
-    def anonymize(self) -> None:
+    def anonymize(self, **kwargs) -> None:
         '''Remove PII from the fileInPhoenix object
 
         Key arguments:
@@ -43,7 +44,16 @@ class FileInPhoenixBIDS(object):
                     fileInPhoenix.general_path = 'PATH/GENERAL/PATH/TO/FILE'
         '''
         module = dtype_module_dict.get(self.dtype)
-        module.remove_pii(self.file_path, self.general_path)
+
+        if self.dtype == 'surveys':
+            pii_table_loc = kwargs.get('pii_table_loc', False)
+            module.process_and_copy_db(
+                    pii_table_loc,
+                    self.subject,
+                    self.file_path,
+                    self.general_path)
+        else:
+            module.remove_pii(self.file_path, self.general_path)
 
     def __repr__(self):
         return f"<{self.file_path.name}>"
@@ -62,8 +72,8 @@ def get_file_objects_from_phoenix(root_dir: Union[Path, str],
     '''Search all files under phoenix and get a list of FileInPhoenix objects
 
     Key Arguments
-        - root_dir: root of PHOENIX directory structure to search files
-                          from, Path or str.
+        - root_dir: 'PROTECTED' directory of PHOENIX structure to search files
+                    which are used to create FileInPhoenix objects, str.
         - BIDS: True if the PHOENIX is in BIDS structure, bool.
     '''
     protected_files = []
@@ -84,12 +94,12 @@ def get_file_objects_from_module(root_dir: Union[Path, str],
     '''Search all files under phoenix and get a list of FileInPhoenix objects
 
     Key Arguments:
-        - root_dir: root of PHOENIX directory structure to search files
-                          from, Path or str.
+        - root_dir: 'PROTECTED' directory of PHOENIX structure to search files
+                    which are used to create FileInPhoenix objects, str.
         - module: name of the module to remove PII from, str.
         - BIDS: True if the PHOENIX is in BIDS structure, bool.
     '''
-    module_dirs = list(root_dir.glob(f'*/{module}')) if BIDS else \
+    module_dirs = list(root_dir.glob(f'*/*/*/{module}')) if BIDS else \
         list(root_dir.glob(f'*/*/{module}'))
 
     protected_files = []
@@ -99,7 +109,8 @@ def get_file_objects_from_module(root_dir: Union[Path, str],
     return protected_files
 
 
-def lock_lochness(Lochness: 'Lochness', module: str = None) -> None:
+def lock_lochness(Lochness: 'Lochness',
+                  module: str = None, **kwargs) -> None:
     '''Lock PII using information from Lochness object
 
     Requirements:
@@ -107,16 +118,36 @@ def lock_lochness(Lochness: 'Lochness', module: str = None) -> None:
                     It needs to have 'phoenix_root' (str) and 'BIDS' (bool).
                     eg) Lochness['phoenix_root'] = '/PATH/TO/PHOENIX'
                         Lochness['BIDS'] = True
+        - module: name of the datatype to remove PII from, str.
+        - expected kwargs:
+            - pii_table: Path of the pii process table, which will be used
+                         in processing survey data, str.
+
     '''
     phoenix_root = Path(Lochness['phoenix_root'])
     protected_root = phoenix_root / 'PROTECTED'
     bids = Lochness['BIDS'] if 'BIDS' in Lochness else False
 
+    pii_table_loc = kwargs.get('pii_table_loc', False)
+    if not pii_table_loc:
+        df = pd.DataFrame({
+            'pii_label_string': [
+                'address', 'phone_number', 'date',
+                'patient_name', 'subject_name'],
+            'process': [
+                'remove', 'random_number', 'change_date',
+                'random_string', 'replace_with_subject_id']
+            })
+        pii_table_loc = phoenix_root.parent / 'pii_convert.csv'
+        df.to_csv(pii_table_loc)
+
+    # get_file_objects_from_phoenix and get_file_objects_from_module takes
+    # PROTECTED path, but FileInPhoenixBIDS and FileInPhoenix are designed
+    # to set both GENERAL & PROTECTED paths.
     file_object_list = get_file_objects_from_phoenix(protected_root, bids) \
         if module is None else \
         get_file_objects_from_module(protected_root, module, bids)
-
+    
     for file_object in file_object_list:
-        file_object.anonymize()
-
+        file_object.anonymize(pii_table_loc=pii_table_loc, **kwargs)
 
