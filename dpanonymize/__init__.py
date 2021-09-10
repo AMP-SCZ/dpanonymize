@@ -140,6 +140,8 @@ def lock_lochness(Lochness: 'Lochness',
             })
         pii_table_loc = phoenix_root.parent / 'pii_convert.csv'
         df.to_csv(pii_table_loc)
+        kwargs['pii_table_loc'] =  pii_table_loc
+
 
     # get_file_objects_from_phoenix and get_file_objects_from_module takes
     # PROTECTED path, but FileInPhoenixBIDS and FileInPhoenix are designed
@@ -149,5 +151,5 @@ def lock_lochness(Lochness: 'Lochness',
         get_file_objects_from_module(protected_root, module, bids)
     
     for file_object in file_object_list:
-        file_object.anonymize(pii_table_loc=pii_table_loc, **kwargs)
+        file_object.anonymize(**kwargs)
 
