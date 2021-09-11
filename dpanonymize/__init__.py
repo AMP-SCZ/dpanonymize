@@ -24,12 +24,24 @@ dtype_module_dict = {
 
 
 class FileInPhoenixBIDS(object):
-    '''PHOENIX file class used to grab file information'''
-    def __init__(self, file_path):
+    '''PHOENIX file class used to grab file information
+
+    Key Arguments:
+        - file_path: file path under BIDS phoenix structure, str
+          Example file_path
+              /Some/Path/PROTECTED/BWH/raw/subject01/actigraphy/file
+              /Some/Path/PROTECTED/BWH/processed/subject01/actigraphy/file
+    '''
+    def __init__(self, file_path: str):
+        search = re.search(r'PROTECTED\/'
+                           r'(?P<study>\w+)\/'
+                           r'(?P<processed>\w+)\/'
+                           r'(?P<subject>\w+)\/'
+                           r'(?P<dtype>\w+)', file_path)
         self.file_path = Path(file_path)
-        self.dtype = self.file_path.parent.name
-        self.subject = self.file_path.parent.parent.name
-        self.study = self.file_path.parent.parent.parent.parent.name
+        self.dtype = search.group('dtype')
+        self.subject = search.group('subject')
+        self.study = search.group('study')
         self.general_path = re.sub('/PROTECTED/', '/GENERAL/',
                                    str(self.file_path))
 
@@ -55,18 +67,37 @@ class FileInPhoenixBIDS(object):
                     self.file_path,
                     self.general_path)
         else:
+            if module == None:
+                raise ModuleDetectionError(
+                        f'Module is not detected: (dtype={self.dtype})')
             module.remove_pii(self.file_path, self.general_path)
 
     def __repr__(self):
         return f"<{self.file_path.name} {self.dtype}"
 
 
+class ModuleDetectionError(Exception):
+    pass
+
+
 class FileInPhoenix(FileInPhoenixBIDS):
-    '''NON-BIDS PHOENIX file class used to grab file information'''
-    def __init__(self, file_path):
+    '''NON-BIDS PHOENIX file class used to grab file information
+
+    Key Arguments:
+        - file_path: file path under non-BIDS phoenix structure, str
+          Example file_path
+              /Some/Path/PROTECTED/BWH/subject01/actigraphy/processed/file
+              /Some/Path/PROTECTED/BWH/subject01/actigraphy/raw/file
+    '''
+    def __init__(self, file_path: str):
         super().__init__(file_path)
-        self.dtype = self.file_path.parent.parent.name
-        self.subject = self.file_path.parent.parent.parent.name
+        search = re.search(r'PROTECTED\/'
+                           r'(?P<study>\w+)\/'
+                           r'(?P<subject>\w+)\/'
+                           r'(?P<dtype>\w+)\/'
+                           r'(?P<processed>\w+)', file_path)
+        self.dtype = search.group('dtype')
+        self.subject = search.group('subject')
 
 
 def get_file_objects_from_phoenix(root_dir: Union[Path, str],
@@ -79,9 +110,11 @@ def get_file_objects_from_phoenix(root_dir: Union[Path, str],
         - BIDS: True if the PHOENIX is in BIDS structure, bool.
     '''
     protected_files = []
+    root_dir = Path(root_dir)
+
     for root, _, files in os.walk(root_dir):
         for file in files:
-            full_path = Path(root) / file
+            full_path = str(Path(root) / file)
             if BIDS:
                 protected_files.append(FileInPhoenixBIDS(full_path))
             else:
