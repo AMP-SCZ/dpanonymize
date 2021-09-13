@@ -58,7 +58,7 @@ class FileInPhoenixBIDS(object):
             module.remove_pii(self.file_path, self.general_path)
 
     def __repr__(self):
-        return f"<{self.file_path.name} {self.dtype}"
+        return f"<{self.file_path.name} {self.dtype}>"
 
 
 class FileInPhoenix(FileInPhoenixBIDS):
