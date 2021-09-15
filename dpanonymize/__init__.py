@@ -31,9 +31,7 @@ class FileInPhoenixBIDS(object):
           Example file_path
               /Some/Path/PROTECTED/BWH/raw/subject01/actigraphy/file
               /Some/Path/PROTECTED/BWH/processed/subject01/actigraphy/file
-
-    Also works with files under extra folders under the dtype root folder
-    /Some/Path/PROTECTED/BWH/processed/subject01/actigraphy/extra_folder/file
+              /Some/Path/PROTECTED/BWH/processed/subject01/actigraphy/Some/Path/file
     '''
     def __init__(self, file_path: str):
         search = re.search(r'PROTECTED\/'
@@ -91,9 +89,7 @@ class FileInPhoenix(FileInPhoenixBIDS):
           Example file_path
               /Some/Path/PROTECTED/BWH/subject01/actigraphy/processed/file
               /Some/Path/PROTECTED/BWH/subject01/actigraphy/raw/file
-
-    Also works with files under extra folders under the dtype root folder
-    /Some/Path/PROTECTED/BWH/processed/subject01/actigraphy/extra_folder/file
+              /Some/Path/PROTECTED/BWH/processed/subject01/actigraphy/Some/Path/file
     '''
     def __init__(self, file_path: str):
         super().__init__(file_path)
