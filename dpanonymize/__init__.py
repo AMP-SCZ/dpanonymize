@@ -102,8 +102,10 @@ class FileInPhoenix(FileInPhoenixBIDS):
         self.subject = search.group('subject')
 
 
-def get_file_objects_from_phoenix(root_dir: Union[Path, str],
-                                  BIDS: bool) -> List[FileInPhoenix]:
+def get_file_objects_from_phoenix(
+        root_dir: Union[Path, str],
+        BIDS: bool,
+        s3_selective_sync: list) -> List[FileInPhoenix]:
     '''Search all files under phoenix and get a list of FileInPhoenix objects
 
     Key Arguments
@@ -115,8 +117,14 @@ def get_file_objects_from_phoenix(root_dir: Union[Path, str],
     root_dir = Path(root_dir)
 
     for root, _, files in os.walk(root_dir):
+        # do not search datatypes which will be selectively synced
         for file in files:
             full_path = str(Path(root) / file)
+            if any([x in full_path for x in s3_selective_sync]):
+                break
+            else:
+                print(root)
+
             if BIDS:
                 protected_files.append(FileInPhoenixBIDS(full_path))
             else:
@@ -183,9 +191,12 @@ def lock_lochness(Lochness: 'Lochness',
     # get_file_objects_from_phoenix and get_file_objects_from_module takes
     # PROTECTED path, but FileInPhoenixBIDS and FileInPhoenix are designed
     # to set both GENERAL & PROTECTED paths.
-    file_object_list = get_file_objects_from_phoenix(protected_root, bids) \
+    s3_selective_sync = kwargs.get('s3_selective_sync', [])
+    file_object_list = get_file_objects_from_phoenix(
+            protected_root, bids, s3_selective_sync) \
         if module is None else \
-        get_file_objects_from_module(protected_root, module, bids)
+        get_file_objects_from_module(protected_root, module,
+                                     bids, s3_selective_sync)
     
     for file_object in file_object_list:
         file_object.anonymize(**kwargs)
